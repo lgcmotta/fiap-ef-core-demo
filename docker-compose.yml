@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    environment:
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=123456
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=BankingApp
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
+    external: false
