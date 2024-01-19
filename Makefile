@@ -1,11 +1,5 @@
 #!make
 
-add-bad:
-	dotnet ef migrations add InitialModeling --project ./examples/EFCoreDemo.BadExamples --context BloggingContext
-
-update-bad:
-	dotnet ef database update --project ./examples/EFCoreDemo.BadExamples --context BloggingContext --connection "Data Source=blogging.db"
-
 add:
 	dotnet ef migrations add InitialModeling --project ./src/BankingApp.API --startup-project ./src/BankingApp.API --context AccountsDbContext --connection "Data Source=localhost;Initial Catalog=BankingApp;Persist Security Info=True;User ID=root;Password=123456;"
 
