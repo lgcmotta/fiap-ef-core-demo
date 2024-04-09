@@ -45,7 +45,7 @@ public class TestClassOne : IClassFixture<BankingAppWebApplicationFactory>, IAsy
         await context.SaveChangesAsync();
 
         // Assert
-        entityEntry.Property<int>("Id").CurrentValue.Should().Be(1);;
+        entityEntry.Property<int>("Id").CurrentValue.Should().Be(1);
     }
 
 
