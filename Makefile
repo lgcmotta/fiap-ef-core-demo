@@ -1,10 +1,10 @@
 #!make
 
 add:
-	dotnet ef migrations add InitialModeling --project ./src/BankingApp.API --startup-project ./src/BankingApp.API --context AccountsDbContext --connection "Data Source=localhost;Initial Catalog=BankingApp;Persist Security Info=True;User ID=root;Password=123456;"
+	dotnet ef migrations add InitialModeling --project ./src/BankingApp.API --startup-project ./src/BankingApp.API --context AccountsDbContext 
 
 update:
-	dotnet ef database update  --project ./src/BankingApp.API --startup-project ./src/BankingApp.API --context AccountsDbContext --connection "Data Source=localhost;Initial Catalog=BankingApp;Persist Security Info=True;User ID=root;Password=123456;"
+	dotnet ef database update --verbose --project ./src/BankingApp.API --startup-project ./src/BankingApp.API --context AccountsDbContext
 
 remove:
 	rm -rf ./src/BankingApp.API/Migrations

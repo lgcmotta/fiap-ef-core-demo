@@ -1,3 +1,4 @@
+using BankingApp.API.Extensions;
 using BankingApp.API.Infrastructure;
 using BankingApp.Domain.Core;
 using MediatR;
@@ -46,7 +47,10 @@ public class TransactionalBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
 
             var dispatchingTasks = domainEvents.Select(domainEvent => _mediator.Publish(domainEvent, cancellationToken));
 
-            await Task.WhenAll(dispatchingTasks);
+            await foreach (var dispatchingTask in dispatchingTasks.WhenEach().WithCancellation(cancellationToken))
+            {
+                await dispatchingTask;
+            }
 
             return response;
         }

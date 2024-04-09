@@ -1,9 +1,11 @@
 using System.Reflection;
 using BankingApp.API.Behaviors;
+using BankingApp.API.Infrastructure;
 using BankingApp.Domain;
 using EFCoreSecondLevelCacheInterceptor;
 using MediatR.NotificationPublishers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace BankingApp.API.Extensions;
 
@@ -16,6 +18,7 @@ public static class ServiceCollectionExtensions
         {
             configuration.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(Account).Assembly);
             configuration.AddOpenBehavior(typeof(LoggingBehavior<,>));
+            configuration.AddOpenBehavior(typeof(TransactionalBehavior<,>));
             configuration.NotificationPublisherType = typeof(TaskWhenAllPublisher);
         });
 
@@ -64,11 +67,11 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    // public static IServiceCollection AddUnitOfWork<TDbContext>(this IServiceCollection services, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
-    //     where TDbContext : DbContext
-    // {
-    //     services.TryAdd(new ServiceDescriptor(typeof(IUnitOfWork), typeof(UnitOfWork<TDbContext>), serviceLifetime));
-    //
-    //     return services;
-    // }
+    public static IServiceCollection AddUnitOfWork<TDbContext>(this IServiceCollection services, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
+        where TDbContext : DbContext
+    {
+        services.TryAdd(new ServiceDescriptor(typeof(IUnitOfWork), typeof(UnitOfWork<TDbContext>), serviceLifetime));
+    
+        return services;
+    }
 }

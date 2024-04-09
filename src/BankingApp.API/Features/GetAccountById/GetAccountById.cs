@@ -10,18 +10,18 @@ public static class GetAccountByIdEndpoint
 {
     public static async Task<IResult> GetAsync(int id, IMediator mediator, CancellationToken cancellationToken = default)
     {
-        var result = await mediator.Send(new GetAccountByIdQuery(id), cancellationToken)
+        var response = await mediator.Send(new GetAccountByIdQuery(id), cancellationToken)
             .ConfigureAwait(continueOnCapturedContext: false);
 
-        return Results.Ok(result);
+        return Results.Ok(response);
     }
 }
 
-public record GetAccountByIdQuery(int AccountId) : IRequest<AccountResponse>;
+public record GetAccountByIdQuery(int AccountId) : IRequest<GetAccountByIdResponse>;
 
-public record AccountResponse(string FullName, string PixKey, decimal Balance);
+public record GetAccountByIdResponse(string FullName, string PixKey, decimal Balance);
 
-public class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByIdQuery, AccountResponse>
+public class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByIdQuery, GetAccountByIdResponse>
 {
     private readonly AccountsDbContext _context;
 
@@ -30,7 +30,7 @@ public class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByIdQuery, A
         _context = context;
     }
 
-    public async Task<AccountResponse> Handle(GetAccountByIdQuery request, CancellationToken cancellationToken)
+    public async Task<GetAccountByIdResponse> Handle(GetAccountByIdQuery request, CancellationToken cancellationToken)
     {
         var account = await _context.Set<Account>()
             .FirstOrDefaultAsync(a => EF.Property<int>(a, "Id") == request.AccountId, cancellationToken)
@@ -41,6 +41,6 @@ public class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByIdQuery, A
             throw new AccountNotFoundException($"Account with id: ${request.AccountId} was not found.");
         }
 
-        return new AccountResponse($"{account.FirstName} {account.LastName}", account.PixKey, account.Balance);
+        return new GetAccountByIdResponse($"{account.FirstName} {account.LastName}", account.PixKey, account.Balance);
     }
 }
